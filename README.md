@@ -1,2 +1,2 @@
 # neural_networks
-Homework on the neural network course
+Repository with homeworks on the Technotrack course "Basic course on neural networks"
