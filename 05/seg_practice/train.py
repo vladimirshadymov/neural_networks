@@ -19,7 +19,7 @@ train_masks = './data/train_masks/'
 test = './data/test/'
 test_masks = './data/test_masks'
 
-if os.path.exists(log) == False:
+if not os.path.exists(log):
     os.mkdir(log)
 tb_writer = SummaryWriter(log_dir='log')
 
@@ -30,7 +30,7 @@ if __name__ == '__main__':
 
     if useCuda == True:
         m = m.cuda()
-        criterion= criterion.cuda()
+        criterion = criterion.cuda()
 
     ds = CarvanaDataset(train, train_masks)
     ds_test = CarvanaDataset(test, test_masks)
@@ -40,7 +40,7 @@ if __name__ == '__main__':
 
     global_iter = 0
     for epoch in range(0, n_epoch):
-        print ("Current epoch: ", epoch)
+        print("Current epoch: ", epoch)
         epoch_loss = 0
         m.train(True)
         for iter, (i, t) in enumerate(tqdm( dl) ):
@@ -58,10 +58,10 @@ if __name__ == '__main__':
             epoch_loss += loss.data[0]
 
         epoch_loss = epoch_loss / float(len(ds))
-        print ("Epoch loss", epoch_loss)
+        print("Epoch loss", epoch_loss)
         tb_writer.add_scalar('Loss/Train', epoch_loss, epoch)
 
-        print ("Make test")
+        print("Make test")
         test_loss = 0
         m.train(False)
 
@@ -83,5 +83,5 @@ if __name__ == '__main__':
                     tb_writer.add_image('Image/Test_output_%d'%k, o[0].cpu(), epoch)  # Tensor
 
         test_loss = test_loss / float(len(ds_test))
-        print ("Test loss", test_loss)
+        print("Test loss", test_loss)
         tb_writer.add_scalar('Loss/Test', test_loss, epoch)
