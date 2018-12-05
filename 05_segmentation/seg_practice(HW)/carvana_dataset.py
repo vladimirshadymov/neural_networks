@@ -29,7 +29,7 @@ class CarvanaDataset(dt.Dataset):
         self.input_size = input_size
 
         self.preprocess = transforms.Compose([
-            transforms.Scale((input_size, input_size)),
+            transforms.Resize((input_size, input_size)),
             transforms.ToTensor()
         ])
 
@@ -53,12 +53,12 @@ class CarvanaDataset(dt.Dataset):
         if os.path.exists(f_name) == False:
             raise Exception('Missing file with name ' + f_name + ' in dataset')
 
-        input = self.pil_load(f_name)
+        input_img = self.pil_load(f_name)
         target = self.pil_load(m_name, False)
 
-        input = self.preprocess(input)
+        input_img = self.preprocess(input_img)
         target = self.preprocess(target)
         target = torch.sum(target, dim=0).unsqueeze(0)
         target[ torch.gt(target, 0) ] = 1
 
-        return input, target
+        return input_img, target
